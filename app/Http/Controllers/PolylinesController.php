@@ -36,24 +36,45 @@ class PolylinesController extends Controller
     public function store(Request $request)
     {
         //Validasi input
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'geometry_polylines' => 'required',
-            'description' => 'required|string',
-        ],
-        [
-            'name.required' => 'Nama polyline wajib diisi.',
-            'geometry_polylines.required' => 'Geometri polyline wajib diisi.',
-            'name.max' => 'Nama polyline tidak boleh lebih dari 255 karakter.',
-            'name,string' => 'Nama polyline harus berupa teks.',
-            'description.required' => 'Deskripsi polyline wajib diisi.',
-            'description.string' => 'Deskripsi polyline harus berupa teks.',
-        ]);
+        $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'geometry_polylines' => 'required',
+                'description' => 'required|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ],
+            [
+                'name.required' => 'Nama polyline wajib diisi.',
+                'geometry_polylines.required' => 'Geometri polyline wajib diisi.',
+                'name.max' => 'Nama polyline tidak boleh lebih dari 255 karakter.',
+                'name,string' => 'Nama polyline harus berupa teks.',
+                'description.required' => 'Deskripsi polyline wajib diisi.',
+                'description.string' => 'Deskripsi polyline harus berupa teks.',
+                'image.image' => 'File gambar tidak valid.',
+                'image.mimes' => 'Format gambar tidak didukung. Harus berupa JPEG, PNG, JPG, atau GIF.',
+                'image.max' => 'Ukuran gambar terlalu besar. Maksimal 2MB.',
+            ]
+        );
+
+        // Cek dan buat direktori penyimpanan gambar jika belum ada
+        if (!is_dir('storage/images')) {
+            mkdir('./storage/images', 0777);
+        }
+
+        // Cek apakah ada file gambar yang diunggah
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name_image = time() . "_polyline." . strtolower($image->getClientOriginalExtension());
+            $image->move('storage/images', $name_image);
+        } else {
+            $name_image = null;
+        }
 
         $data = [
             'name' => $request->name,
             'geom' => $request->geometry_polylines,
             'description' => $request->description,
+            'image' => $name_image,
         ];
 
         // Simpan data ke database

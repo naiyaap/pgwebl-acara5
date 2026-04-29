@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class PolygonsController extends Controller
 {
-protected $polygons;
+    protected $polygons;
 
     public function __construct()
     {
@@ -32,24 +32,45 @@ protected $polygons;
     public function store(Request $request)
     {
         //Validasi input
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'geometry_polygons' => 'required',
-            'description' => 'required|string',
-        ],
-        [
-            'name.required' => 'Nama polygon wajib diisi.',
-            'geometry_polygons.required' => 'Geometri polygon wajib diisi.',
-            'name.max' => 'Nama polygon tidak boleh lebih dari 255 karakter.',
-            'name,string' => 'Nama polygon harus berupa teks.',
-            'description.required' => 'Deskripsi polygon wajib diisi.',
-            'description.string' => 'Deskripsi polygon harus berupa teks.',
-        ]);
+        $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'geometry_polygons' => 'required',
+                'description' => 'required|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ],
+            [
+                'name.required' => 'Nama polygon wajib diisi.',
+                'geometry_polygons.required' => 'Geometri polygon wajib diisi.',
+                'name.max' => 'Nama polygon tidak boleh lebih dari 255 karakter.',
+                'name,string' => 'Nama polygon harus berupa teks.',
+                'description.required' => 'Deskripsi polygon wajib diisi.',
+                'description.string' => 'Deskripsi polygon harus berupa teks.',
+                'image.image' => 'File gambar tidak valid.',
+                'image.mimes' => 'Format gambar tidak didukung. Harus berupa JPEG, PNG, JPG, atau GIF.',
+                'image.max' => 'Ukuran gambar terlalu besar. Maksimal 2MB.',
+            ]
+        );
+
+         // Cek dan buat direktori penyimpanan gambar jika belum ada
+        if (!is_dir('storage/images')) {
+            mkdir('./storage/images', 0777);
+        }
+
+        // Cek apakah ada file gambar yang diunggah
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name_image = time() . "_polygon." . strtolower($image->getClientOriginalExtension());
+            $image->move('storage/images', $name_image);
+        } else {
+            $name_image = null;
+        }
 
         $data = [
             'name' => $request->name,
             'geom' => $request->geometry_polygons,
             'description' => $request->description,
+            'image' => $name_image
         ];
 
         // Simpan data ke database
