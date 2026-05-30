@@ -17,6 +17,23 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('tabel') }}"><i class="fa-solid fa-table"></i> Tabel</a>
                     </li>
+                    @guest
+                        <li class="nav-item bg-primary rounded">
+                        <a class="nav-link text-white" href="{{ route('login') }}"><i class="fa-solid fa-circle-user"></i> Login</a>
+                    </li>
+                    @endguest
+
+                    @auth
+                        <li class="nav-item bg-danger rounded">
+                            <a class="nav-link text-white" href="{{ route('logout') }}"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </li>
+                    @endauth
                 </ul>
             </div>
         </div>

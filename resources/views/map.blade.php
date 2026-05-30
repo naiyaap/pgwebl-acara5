@@ -59,10 +59,11 @@
                             <div class="mb-3">
                                 <label for="image" class="form-label">Image</label>
                                 <input class="form-control" type="file" id="image" name="image"
-                                onchange="document.getElementById('preview-image-point').src = window.URL.createObjectURL(this.files[0])">
+                                    onchange="document.getElementById('preview-image-point').src = window.URL.createObjectURL(this.files[0])">
                             </div>
                             <div class="mb-3">
-                                <img src="" alt="" id="preview-image-point" class="img-thumbnail" width="400">
+                                <img src="" alt="" id="preview-image-point" class="img-thumbnail"
+                                    width="400">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -101,10 +102,11 @@
                             <div class="mb-3">
                                 <label for="image" class="form-label">Image</label>
                                 <input class="form-control" type="file" id="image" name="image"
-                                onchange="document.getElementById('preview-image-polyline').src = window.URL.createObjectURL(this.files[0])">
+                                    onchange="document.getElementById('preview-image-polyline').src = window.URL.createObjectURL(this.files[0])">
                             </div>
                             <div class="mb-3">
-                                <img src="" alt="" id="preview-image-polyline" class="img-thumbnail" width="400">
+                                <img src="" alt="" id="preview-image-polyline" class="img-thumbnail"
+                                    width="400">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -143,10 +145,11 @@
                             <div class="mb-3">
                                 <label for="image" class="form-label">Image</label>
                                 <input class="form-control" type="file" id="image" name="image"
-                                onchange="document.getElementById('preview-image-polygon').src = window.URL.createObjectURL(this.files[0])">
+                                    onchange="document.getElementById('preview-image-polygon').src = window.URL.createObjectURL(this.files[0])">
                             </div>
                             <div class="mb-3">
-                                <img src="" alt="" id="preview-image-polygon" class="img-thumbnail" width="400">
+                                <img src="" alt="" id="preview-image-polygon" class="img-thumbnail"
+                                    width="400">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -269,6 +272,10 @@
                     var deletepoints = "{{ route('points.delete', ':id') }}";
                     deletepoints = deletepoints.replace(':id', feature.properties.id);
 
+                    //Route edit point
+                    var editpoints = "{{ route('point.edit', ':id') }}";
+                    editpoints = editpoints.replace(':id', feature.properties.id);
+
                     // variable popup content
                     var popup_content = "Nama: " + feature.properties.name + "<br>" +
                         "Deskripsi: " + feature.properties.description + "<br>" +
@@ -277,12 +284,18 @@
                         "<img src='{{ asset('storage/images') }}/" + feature.properties.image +
                         "' alt='Image' class='img-thumbnail' width='400'>" +
                         "<br><br>" +
+                    "<div class='row'>" +
+                        "<div class='col-2'>" +
                         "<form action='" + deletepoints + "' method='POST'>" +
                         '@csrf' +
-                        '@method("delete")' +
-                        "<button type='submit' class ='btn btn-danger btn-sm' title='Delete Point' onclick='return confirm(`Apakah Anda yakin ingin menghapus point ini?`)'><i class='fa-solid fa-trash-can'></i></button>"+
-                        "</form>";
-
+                        '@method('delete')' +
+                        "<button type='submit' class ='btn btn-danger btn-sm' title='Delete Point' onclick='return confirm(`Apakah Anda yakin ingin menghapus point ini?`)'><i class='fa-solid fa-trash-can'></i></button>" +
+                        "</form>" +
+                        "</div>" +
+                        "<div class='col-2'>" +
+                        "<a href = '" + editpoints + "' class='btn btn-warning btn-sm' title='Edit Point'><i class='fa-solid fa-pen-to-square'></i></a>" +
+                        "</div>" +
+                    "</div>";
 
                     layer.on({
                         click: function(e) {
@@ -305,23 +318,35 @@
                 // onEachFeature
                 onEachFeature: function(feature, layer) {
 
-                     //Route delete polyline
+                    //Route delete polyline
                     var deletepolylines = "{{ route('polylines.delete', ':id') }}";
                     deletepolylines = deletepolylines.replace(':id', feature.properties.id);
+
+                    //Route edit polyline
+                    var editpolylines = "{{ route('polylines.edit', ':id') }}";
+                    editpolylines = editpolylines.replace(':id', feature.properties.id);
 
                     // variable popup content
                     var popup_content = "Nama: " + feature.properties.name + "<br>" +
                         "Deskripsi: " + feature.properties.description + "<br>" +
                         "Dibuat pada: " + feature.properties.created_at + "<br>" +
-                        "Diperbarui pada: " + feature.properties.updated_at + "<br>"  +
+                        "Diperbarui pada: " + feature.properties.updated_at + "<br>" +
                         "<img src='{{ asset('storage/images') }}/" + feature.properties.image +
                         "' alt='Image' class='img-thumbnail' width='400'>" +
                         "<br><br>" +
+                    "<div class='row'>" +
+                        "<div class='col-2'>" +
                         "<form action='" + deletepolylines + "' method='POST'>" +
                         '@csrf' +
-                        '@method("delete")' +
-                        "<button type='submit' class ='btn btn-danger btn-sm' title='Delete Polyline' onclick='return confirm(`Apakah Anda yakin ingin menghapus polyline ini?`)'><i class='fa-solid fa-trash-can'></i></button>"+
-                        "</form>";
+                        '@method('delete')' +
+                        "<button type='submit' class ='btn btn-danger btn-sm' title='Delete Polyline' onclick='return confirm(`Apakah Anda yakin ingin menghapus polyline ini?`)'><i class='fa-solid fa-trash-can'></i></button>" +
+                        "</form>" +
+                        "</div>" +
+                        "<div class='col-2'>" +
+                        "<a href='" + editpolylines + "' class='btn btn-warning btn-sm' title='Edit Polyline'><i class='fa-solid fa-pen-to-square'></i></a>" +
+                        "</div>" +
+                    "</div>";
+;
 
                     layer.on({
                         click: function(e) {
@@ -344,23 +369,34 @@
                 // onEachFeature
                 onEachFeature: function(feature, layer) {
 
-                     //Route delete polygon
+                    //Route delete polygon
                     var deletepolygons = "{{ route('polygons.delete', ':id') }}";
                     deletepolygons = deletepolygons.replace(':id', feature.properties.id);
+
+                    //Route edit polygon
+                    var editpolygons = "{{ route('polygons.edit', ':id') }}";
+                    editpolygons = editpolygons.replace(':id', feature.properties.id);
 
                     // variable popup content
                     var popup_content = "Nama: " + feature.properties.name + "<br>" +
                         "Deskripsi: " + feature.properties.description + "<br>" +
                         "Dibuat pada: " + feature.properties.created_at + "<br>" +
-                        "Diperbarui pada: " + feature.properties.updated_at + "<br>"  +
+                        "Diperbarui pada: " + feature.properties.updated_at + "<br>" +
                         "<img src='{{ asset('storage/images') }}/" + feature.properties.image +
                         "' alt='Image' class='img-thumbnail' width='400'>" +
                         "<br><br>" +
+                    "<div class='row'>" +
+                        "<div class='col-2'>" +
                         "<form action='" + deletepolygons + "' method='POST'>" +
                         '@csrf' +
-                        '@method("delete")' +
-                        "<button type='submit' class ='btn btn-danger btn-sm' title='Delete Polygon' onclick='return confirm(`Apakah Anda yakin ingin menghapus polygon ini?`)'><i class='fa-solid fa-trash-can'></i></button>"+
-                        "</form>";
+                        '@method('delete')' +
+                        "<button type='submit' class ='btn btn-danger btn-sm' title='Delete Polygon' onclick='return confirm(`Apakah Anda yakin ingin menghapus polygon ini?`)'><i class='fa-solid fa-trash-can'></i></button>" +
+                        "</form>" +
+                        "</div>" +
+                        "<div class='col-2'>" +
+                        "<a href='" + editpolygons + "' class='btn btn-warning btn-sm' title='Edit Polygon'><i class='fa-solid fa-pen-to-square'></i></a>" +
+                        "</div>" +
+                    "</div>";
 
                     layer.on({
                         click: function(e) {

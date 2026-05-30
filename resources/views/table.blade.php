@@ -1,6 +1,7 @@
 @extends('layouts.template')
 
 @section('styles')
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.css">
     <style>
         body {
             margin: 0;
@@ -18,59 +19,118 @@
     <div class="container mt-4">
         <div class="card">
             <div class="card-header">
-                <h3>Tabel Data</h3>
+                <h3>Tabel Data Point</h3>
             </div>
             <div class="card-body">
-                <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped" id="tabeldatapoints">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Nama</th>
-                            <th>Kantor</th>
+                            <th>Deskripsi</th>
+                            <th>Foto</th>
+                            <th>Tanggal Pembuatan</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>5</td>
-                            <td>Leon S. Kennedy</td>
-                            <td>Division of Security Operations Office, Washington D.C.</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>Jill Valentine</td>
-                            <td>Bioterrorism Security Assessment Alliance (BSAA) HQ, Europe</td>
-                        </tr>
-                        <tr>
-                            <td>7</td>
-                            <td>Chris Redfield</td>
-                            <td>BSAA North America Branch, New York</td>
-                        </tr>
-                        <tr>
-                            <td>8</td>
-                            <td>Claire Redfield</td>
-                            <td>TerraSave Headquarters, Washington D.C.</td>
-                        </tr>
-                        <tr>
-                            <td>9</td>
-                            <td>Barry Burton</td>
-                            <td>Umbrella Security Service, Raccoon City</td>
-                        <tr>
-                            <td>10</td>
-                            <td>Rebecca Chambers</td>
-                            <td>University Research Laboratory, Chicago</td>
-                        </tr>
-                        <tr>
-                            <td>11</td>
-                            <td>Carlos Oliveira</td>
-                            <td>Umbrella Biohazard Countermeasure Service (UBCS), Raccoon City</td>
-                        </tr>
-                        <tr>
-                            <td>12</td>
-                            <td>Albert Wesker</td>
-                            <td>Umbrella Corporation Research Facility, Raccoon City</td>
-                        </tr>
+                        @php
+                            $no = 1;
+                        @endphp
+                        @foreach ($points as $point)
+                            <tr>
+                                <td>{{ $no++ }}</td>
+                                <td>{{ $point->name }}</td>
+                                <td>{{ $point->description }}</td>
+                                <td>
+                                    <img src="{{ asset('storage/images' . '/'. $point->image) }}" alt="" width="200">
+                                </td>
+                                <td>{{ $point->created_at }}</td>
+                            </tr>
+
+
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h3>Tabel Data Polyline</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped" id="tabeldatapolyline">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama</th>
+                            <th>Deskripsi</th>
+                            <th>Foto</th>
+                            <th>Tanggal Pembuatan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $no = 1;
+                        @endphp
+                        @foreach ($polylines as $polyline)
+                            <tr>
+                                <td>{{ $no++ }}</td>
+                                <td>{{ $polyline->name }}</td>
+                                <td>{{ $polyline->description }}</td>
+                                <td>
+                                    <img src="{{ asset('storage/images' . '/'. $polyline->image) }}" alt="" width="200">
+                                </td>
+                                <td>{{ $polyline->created_at }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h3>Tabel Data Polygons</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped" id="tabeldatapolygons">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama</th>
+                            <th>Deskripsi</th>
+                            <th>Foto</th>
+                            <th>Tanggal Pembuatan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $no = 1;
+                        @endphp
+                        @foreach ($polygons as $polygon)
+                            <tr>
+                                <td>{{ $no++ }}</td>
+                                <td>{{ $polygon->name }}</td>
+                                <td>{{ $polygon->description }}</td>
+                                <td>
+                                    <img src="{{ asset('storage/images' . '/'. $polygon->image) }}" alt="" width="200">
+                                </td>
+                                <td>{{ $polygon->created_at }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+@endsection
+
+@section('scripts')
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.3.8/js/dataTables.js"></script>
+    <script>
+        new DataTable('#tabeldatapoints');
+        new DataTable('#tabeldatapolyline');
+        new DataTable('#tabeldatapolygons');
+    </script>
 @endsection
